@@ -4,7 +4,7 @@ on:
   repository_dispatch:
   push:
     branches:
-      - main
+      - main-test
 
 jobs:
   deploy:
@@ -43,7 +43,7 @@ jobs:
             exit 1
           fi
           
-          KV_ID=$(echo "$LIST_OUTPUT" | jq -r '.[] | select(.title == "sublink-worker-'$KV_NAMESPACE'") | .id')
+          KV_ID=$(echo "$LIST_OUTPUT" | jq -r '.[] | select(.title == "'$KV_NAMESPACE'") | .id')
           
           if [ -z "$KV_ID" ]; then
               echo "KV namespace $KV_NAMESPACE does not exist. Creating..."
@@ -77,7 +77,7 @@ jobs:
           cat wrangler.toml
           
       - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@2.0.0
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           command: deploy
